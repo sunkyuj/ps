@@ -24,8 +24,15 @@ def solution(numbers):
     snums.sort(reverse=1)
     for snum in snums:
         answer += snum.string_n
-
-    return str(int(answer))
+#     for snum in snums:
+#         d[snum[0]].append(Number(snum)) # mod, org
+        
+#     for i in range(9,-1,-1):
+#         d[str(i)].sort(key=lambda x:(-x[0],len))
+#         print(d[str(i)])
+#         for mod,org in d[str(i)]:
+#             answer += org
+    return answer
 
 """
 
