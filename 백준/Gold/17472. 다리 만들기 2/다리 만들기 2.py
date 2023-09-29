@@ -10,6 +10,18 @@ dy = [-1, 0, 1, 0]
 dx = [0, 1, 0, -1]  # urdl
 
 
+def union(v1, v2):
+    r1, r2 = find(v1), find(v2)
+    root[r2] = r1
+
+
+def find(v):
+    if root[v] == v:
+        return v
+    root[v] = find(root[v])
+    return root[v]
+
+
 def div(i, j, island_num):
     q = deque()
     q.append((i, j))
@@ -61,47 +73,22 @@ for i, info in islands.items():
                 conn.add((l, i, end))
 
 conn = sorted(conn)
-# print(conn)
 
-check = set()
 ans = 0
 cnt = 0
-
 root = [i for i in range(island_num + 1)]
 
-
-def union(v1, v2):
-    r1, r2 = find(v1), find(v2)
-    root[r2] = r1
-
-
-def find(v):
-    if root[v] == v:
-        return v
-    root[v] = find(root[v])
-    return root[v]
-
-
 for l, a, b in conn:
-    if (a, b) not in check and find(a) != find(b):
-        check.add((a, b))
+    if find(a) != find(b):
         ans += l
         cnt += 1
         union(a, b)
     if cnt == island_num - 1:
-        r = find(1)
-        for i in range(2, island_num + 1):
-            if r != find(i):
-                print(-1)
-                exit()
-        print(ans)
-        exit()
-print(-1)
+        break
 
-"""
-4 6
-0 1 1 0 1 1
-1 0 1 0 0 1
-1 0 1 1 0 0
-1 0 1 1 1 0
-"""
+r = find(1)
+for i in range(2, island_num + 1):
+    if r != find(i):
+        ans = -1
+        break
+print(ans)
