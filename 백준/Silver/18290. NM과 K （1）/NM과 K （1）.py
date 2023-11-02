@@ -24,27 +24,14 @@ def f(y, x, cnt, s):
         global ans
         ans = max(ans, s)
         return
-    if y == n:
-        return
 
-    ny, nx = y, x
-    nx += 1
-    if nx == m:
-        nx = 0
-        ny += 1
+    for i in range(y, n):
+        for j in range(x if i == y else 0, m):
 
-    # 0
-    f(ny, nx, cnt, s)
-
-    # 1
-    if check(y, x):
-        visit[y][x] = 1
-        f(ny, nx, cnt + 1, s + board[y][x])
-        visit[y][x] = 0
-
-    return
-
+            if not visit[i][j] and check(i, j):
+                visit[i][j] = 1
+                f(i, j, cnt + 1, s + board[i][j])
+                visit[i][j] = 0
 
 f(0, 0, 0, 0)
-
 print(ans)
