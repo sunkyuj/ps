@@ -1,38 +1,36 @@
-n = int(input())
-arr = [(0,0,0,0)]
-dp = [0] * (n + 1)
+n = int(input())  # n
+blocks = []  # idx, s, h, w
 
-for i in range(1, n+1):
-    a, h, w = map(int, input().split())
-    # 인덱스 번호 출력을 위해 i값 같이 저장
-    arr.append((i, a, h, w))
+# 높이만 유일하게 같을 수도 있음
+# 무게랑 면적은 오름차순 (아래가 제일 넓고 무겁)
+for i in range(n):
+    s, h, w = map(int, input().split())
+    blocks.append((i, s, h, w))
 
-# 무게를 기준으로 정렬
-arr.sort(key = lambda x:x[3])
+blocks.sort(key=lambda x: -x[1])  # 면적 내림차순, 무게로 승부
 
 
-for i in range(1, n+1):
-    for j in range(0, i):
-        # arr[i][1](현재 벽돌) 밑면의 길이가 arr[j][1](쌓여있는 벽돌)보다 크다면 통과  
-        if arr[i][1] > arr[j][1]:
-#             현재 높이와 지금까지 쌓은 높이 + 자기 자신의 높이중 높은 값으로 갱신
-            dp[i] = max(dp[i], arr[i][2] + dp[j])
+dp = [0] * n
+dp[0] = blocks[0][2]
 
-#  max_value 역추적해서 result 출력하기
-max_value = max(dp)
-index = n
-result = []
+for i in range(1, n):
+    # i 보다 무거운놈 찾기
+    dp[i] = blocks[i][2]
+    for j in range(i - 1, -1, -1):
+        if blocks[j][3] > blocks[i][3]:
+            # 걔랑 max 하기
+            if dp[i] < dp[j] + blocks[i][2]:
+                dp[i] = dp[j] + blocks[i][2]
 
-while index != 0:
-#     max_value 와 dp[index]가 같다면
-    if max_value == dp[index]:
-#         arr[index]의  인덱스 값 추가
-        result.append(arr[index][0])
-#        arr[index]값 추가 했으니 추가한 벽돌의 높이 값 빼기
-        max_value = max_value - arr[index][2]
-    index -= 1
-    
-# 가장 위부터 출력해야하기 때문에 reverse
-result.reverse()
-print(len(result))
-[print(i) for i in result]
+# print(dp)
+ans = []
+val = max(dp)
+for i in range(n - 1, -1, -1):
+    if val == dp[i]:
+        ans.append(blocks[i][0] + 1)
+        val -= blocks[i][2]
+
+
+print(len(ans))
+for i in range(len(ans)):
+    print(ans[i])
